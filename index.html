@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EcoCycle AI - Platform Circular Fashion</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    
+    <style>
+        /* ========== ROOT & VARIABLES ========== */
+        :root {
+            --primary: #059669; /* Emerald Green */
+            --primary-hover: #047857;
+            --primary-light: #d1fae5;
+            --bg-main: #f8fafc; /* Slate 50 */
+            --bg-card: #ffffff;
+            --text-main: #0f172a; /* Slate 900 */
+            --text-muted: #64748b; /* Slate 500 */
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-full: 9999px;
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="dark"] {
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --primary-light: #064e3b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            transition: background var(--transition), color var(--transition);
+            overflow-x: hidden;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        /* ========== TYPOGRAPHY & BUTTONS ========== */
+        .section-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: var(--primary-light);
+            color: var(--primary);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            border-radius: var(--radius-full);
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 16px;
+            color: var(--text-main);
+        }
+
+        .section-desc {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin-bottom: 32px;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--primary);
+            color: #fff;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            padding: 24px;
+            transition: var(--transition);
+        }
+        .card:hover { box-shadow: var(--shadow-md); }
+
+        /* ========== NAVBAR ========== */
+        .navbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            padding: 16px 0;
+            transition: var(--transition);
+            background: transparent;
+        }
+        .navbar.scrolled {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+        }
+        .navbar .container { display: flex; align-items: center; justify-content: space-between; }
+        .nav-brand {
+            display: flex; align-items: center; gap: 10px;
+            text-decoration: none; font-weight: 800; font-size: 1.25rem; color: #fff;
+        }
+        .navbar.scrolled .nav-brand { color: var(--text-main); }
+        .nav-brand i { color: var(--primary); font-size: 1.5rem; }
+        
+        .nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
+        .nav-links a {
+            text-decoration: none; color: rgba(255, 255, 255, 0.9);
+            font-weight: 500; font-size: 0.9rem; transition: var(--transition);
+        }
+        .navbar.scrolled .nav-links a { color: var(--text-muted); }
+        .navbar.scrolled .nav-links a:hover, .nav-links a:hover { color: var(--primary); }
+
+        .nav-actions { display: flex; align-items: center; gap: 12px; }
+        .icon-btn {
+            background: transparent; border: 1px solid rgba(255,255,255,0.3);
+            border-radius: var(--radius-md); width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: #fff; transition: var(--transition);
+        }
+        .navbar.scrolled .icon-btn { border-color: var(--border); color: var(--text-main); }
+        .icon-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+        .cart-badge {
+            position: absolute; top: -4px; right: -4px;
+            background: var(--primary); color: #fff; border-radius: 50%;
+            width: 18px; height: 18px; font-size: 0.65rem;
+            display: flex; align-items: center; justify-content: center; font-weight: 700;
+        }
+
+        .hamburger { display: none; background: none; border: none; cursor: pointer; color: #fff; font-size: 1.5rem; }
+        .navbar.scrolled .hamburger { color: var(--text-main); }
+
+        /* ========== HERO ========== */
+        .hero {
+            padding: 160px 0 100px;
+            position: relative;
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            background-image: url('bgjember.avif');
+            background-size: cover;
+            background-position: center;
+        }
+        .hero::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(to right, rgba(15, 23, 42, 0.9) 0%, rgba(15, 23, 42, 0.7) 100%);
+            z-index: 1;
+        }
+        .hero .container { position: relative; z-index: 2; text-align: left; max-width: 800px; }
+        
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 3.8rem);
+            font-weight: 800; line-height: 1.1; margin-bottom: 20px;
+            color: #fff; letter-spacing: -0.02em;
+        }
+        .hero h1 span { color: var(--primary-light); }
+        .hero p {
+            font-size: 1.15rem; color: rgba(255, 255, 255, 0.85);
+            max-width: 600px; margin-bottom: 32px;
+        }
+
+        .hero-stats {
+            display: flex; gap: 40px; margin-top: 48px;
+            padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .hero-stats div h3 { font-size: 1.8rem; font-weight: 800; color: #fff; margin-bottom: 4px; }
+        .hero-stats div p { font-size: 0.85rem; color: var(--text-muted); margin: 0; }
+
+        /* ========== MAIN SECTIONS ========== */
+        section { padding: 80px 0; }
+        .bg-alt { background: var(--bg-card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+        /* ========== SETOR LIMBAH ========== */
+        .setor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+        
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 0.9rem; }
+        .form-control {
+            width: 100%; padding: 12px 16px;
+            border: 1px solid var(--border); border-radius: var(--radius-md);
+            background: var(--bg-main); color: var(--text-main);
+            font-size: 0.95rem; font-family: inherit; transition: var(--transition);
+        }
+        .form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
+        
+        .file-upload {
+            border: 2px dashed var(--border); border-radius: var(--radius-md);
+            padding: 32px; text-align: center; cursor: pointer; transition: var(--transition);
+        }
+        .file-upload:hover { border-color: var(--primary); background: var(--primary-light); }
+        .file-upload i { font-size: 2rem; color: var(--primary); margin-bottom: 12px; }
+
+        .delivery-options { display: flex; gap: 12px; }
+        .delivery-opt {
+            flex: 1; padding: 12px; border: 1px solid var(--border); border-radius: var(--radius-md);
+            text-align: center; cursor: pointer; transition: var(--transition); font-size: 0.9rem; font-weight: 500;
+        }
+        .delivery-opt.active { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
+        .delivery-opt i { display: block; font-size: 1.2rem; margin-bottom: 6px; }
+
+        .setor-form .btn-primary { width: 100%; margin-top: 12px; }
+
+        /* ========== RESULT CARD ========== */
+        .result-placeholder { text-align: center; padding: 40px 0; color: var(--text-muted); }
+        .result-placeholder i { font-size: 3rem; color: var(--border); margin-bottom: 16px; }
+        
+        .result-card { display: none; animation: fadeIn 0.4s ease; }
+        .result-header { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+        .result-header .icon-box { width: 48px; height: 48px; background: var(--primary-light); color: var(--primary); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        .result-header h3 { font-size: 1.1rem; font-weight: 700; }
+        
+        .data-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed var(--border); font-size: 0.9rem; }
+        .data-row:last-child { border: none; }
+        .data-row .label { color: var(--text-muted); }
+        .data-row .value { font-weight: 600; }
+        .data-row .value.green { color: var(--primary); }
+        .data-row .value.gold { color: #d97706; }
+
+        .alert-box { background: var(--primary-light); border-left: 3px solid var(--primary); padding: 12px 16px; border-radius: var(--radius-md); font-size: 0.85rem; margin: 16px 0; color: var(--text-main); }
+
+        /* ========== PROGRESS BAR ========== */
+        .loading-container { display: none; text-align: center; padding: 32px; }
+        .progress-bar-wrapper { width: 100%; background: var(--border); border-radius: var(--radius-full); height: 8px; margin: 16px 0; overflow: hidden; }
+        .progress-bar-fill { height: 100%; width: 0%; background: var(--primary); transition: width 0.3s ease; }
+        
+        /* ========== FITUR & MARKETPLACE ========== */
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 32px; }
+        .feature-card .icon-box { width: 40px; height: 40px; background: var(--primary-light); color: var(--primary); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-bottom: 16px; }
+        .feature-card h4 { font-size: 1rem; margin-bottom: 8px; }
+        .feature-card .subtitle { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px; }
+        
+        .demo-output { background: var(--bg-main); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; margin-top: 16px; font-size: 0.85rem; }
+
+        .marketplace-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; margin-top: 32px; }
+        .product-card { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
+        .product-image { position: relative; aspect-ratio: 1; background: var(--border); overflow: hidden; }
+        .product-image img { width: 100%; height: 100%; object-fit: cover; transition: var(--transition); }
+        .product-card:hover .product-image img { transform: scale(1.05); }
+        .badge { position: absolute; padding: 4px 12px; border-radius: var(--radius-full); font-size: 0.7rem; font-weight: 700; }
+        .badge-materi { top: 12px; left: 12px; background: rgba(0,0,0,0.7); color: #fff; backdrop-filter: blur(4px); }
+        .badge-disc { top: 12px; right: 12px; background: #ef4444; color: #fff; }
+        
+        .product-info { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+        .product-name { font-weight: 700; margin-bottom: 4px; }
+        .product-meta { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; }
+        .product-price { font-size: 1.2rem; font-weight: 800; color: var(--primary); margin-bottom: 16px; margin-top: auto; }
+        .product-actions { display: flex; gap: 8px; }
+        .product-actions button { flex: 1; padding: 8px; border-radius: var(--radius-md); font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: var(--transition); }
+        .btn-add { background: var(--primary-light); color: var(--primary); border: none; }
+        .btn-add:hover { background: var(--primary); color: #fff; }
+        .btn-buy { background: var(--bg-main); border: 1px solid var(--border); color: var(--text-main); }
+        .btn-buy:hover { border-color: var(--primary); color: var(--primary); }
+
+        /* ========== VOLUNTEER ========== */
+        .volunteer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 32px; }
+        .vol-card { text-align: center; display: flex; flex-direction: column; align-items: center; }
+        .vol-avatar { width: 64px; height: 64px; background: var(--primary-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--primary); margin-bottom: 16px; }
+        .vol-name { font-weight: 700; margin-bottom: 4px; }
+        .vol-role { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; }
+        .vol-badge { background: var(--bg-main); border: 1px solid var(--border); padding: 4px 12px; border-radius: var(--radius-full); font-size: 0.7rem; font-weight: 600; margin-bottom: 16px; }
+        .vol-desc { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px; flex: 1; }
+        .vol-btn { width: 100%; padding: 8px; border-radius: var(--radius-md); background: #25D366; color: #fff; font-weight: 600; border: none; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .vol-btn:hover { background: #128C7E; transform: translateY(-2px); }
+
+        /* ========== IMPACT ========== */
+        .impact-section { background: var(--text-main); color: #fff; text-align: center; }
+        .impact-section .section-title { color: #fff; }
+        .impact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 40px; }
+        .impact-item { background: rgba(255,255,255,0.05); padding: 32px; border-radius: var(--radius-lg); border: 1px solid rgba(255,255,255,0.1); }
+        .impact-item .number { font-size: 2.5rem; font-weight: 800; color: var(--primary-light); display: block; margin-bottom: 8px; }
+
+        /* ========== CART SIDEBAR ========== */
+        .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; opacity: 0; pointer-events: none; transition: var(--transition); }
+        .cart-overlay.active { opacity: 1; pointer-events: all; }
+        .cart-sidebar { position: fixed; top: 0; right: -400px; width: 100%; max-width: 400px; height: 100vh; background: var(--bg-card); z-index: 2001; padding: 24px; transition: var(--transition); display: flex; flex-direction: column; box-shadow: var(--shadow-lg); }
+        .cart-sidebar.active { right: 0; }
+        .cart-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+        .cart-items { flex: 1; overflow-y: auto; }
+        .cart-footer { padding-top: 16px; border-top: 1px solid var(--border); }
+
+        /* ========== FLOATING WHATSAPP ========== */
+        .wa-float {
+            position: fixed; bottom: 24px; left: 24px; z-index: 999;
+            display: flex; flex-direction: column; align-items: flex-start; gap: 8px;
+        }
+        .wa-btn {
+            display: flex; align-items: center; gap: 10px;
+            background: #25D366; color: #fff; padding: 12px 20px;
+            border-radius: var(--radius-full); text-decoration: none;
+            font-weight: 600; font-size: 0.9rem;
+            box-shadow: var(--shadow-lg); transition: var(--transition);
+        }
+        .wa-btn:hover { transform: translateY(-2px); background: #128C7E; }
+        .wa-label {
+            background: var(--bg-card); padding: 4px 12px;
+            border-radius: var(--radius-full); font-size: 0.7rem;
+            color: var(--text-muted); border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* ========== ANIMATIONS ========== */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .setor-grid, .volunteer-grid { grid-template-columns: 1fr; }
+            .hero-stats { flex-direction: column; gap: 20px; }
+            .nav-links { display: none; }
+            .hamburger { display: block; }
+            .impact-grid { grid-template-columns: 1fr; }
+            .wa-btn span { display: none; }
+            .wa-btn { padding: 12px; border-radius: 50%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- FLOATING WHATSAPP CS -->
+    <div class="wa-float">
+        <a href="https://wa.me/6281212345678?text=Halo%20EcoCycle%20AI,%20saya%20ingin%20bertanya." target="_blank" class="wa-btn">
+            <i class="fab fa-whatsapp" style="font-size: 1.4rem;"></i>
+            <span>Chat Customer Service</span>
+        </a>
+        <span class="wa-label">Online 24 Jam</span>
+    </div>
+
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="#" class="nav-brand">
+                <i class="fas fa-leaf"></i>
+                <span>EcoCycle AI</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#setor">Setor Limbah</a></li>
+                <li><a href="#fitur">Teknologi AI</a></li>
+                <li><a href="#marketplace">Marketplace</a></li>
+                <li><a href="#volunteer">Pendampingan</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="icon-btn" id="themeToggle" style="position:relative;">
+                    <i class="fas fa-sun"></i>
+                </button>
+                <button class="icon-btn" id="cartToggle" style="position:relative;">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-badge" id="cartCount">0</span>
+                </button>
+                <button class="hamburger"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="section-badge" style="background: rgba(255,255,255,0.1); color: #fff;">Platform NLP & Rule-Based System</div>
+            <h1>Transformasi Limbah Pesisir <br><span>Menjadi Produk Bernilai Ekonomi</span></h1>
+            <p>Sistem cerdas berbasis web yang menghubungkan identifikasi limbah, rekomendasi produk, dan akses pasar UMKM dalam satu ekosistem sirkular.</p>
+            <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                <a href="#setor" class="btn-primary"><i class="fas fa-arrow-right"></i> Mulai Setor Limbah</a>
+                <a href="#volunteer" class="btn-primary" style="background: transparent; border: 1px solid rgba(255,255,255,0.3);"><i class="fas fa-user-graduate"></i> Bimbingan Volunteer</a>
+            </div>
+            
+            <div class="hero-stats">
+                <div><h3>500+</h3><p>UMKM Terbantu</p></div>
+                <div><h3 id="totalWasteHero">1.250</h3><p>Kg Limbah Terkelola</p></div>
+                <div><h3>96.3%</h3><p>Akurasi Identifikasi NLP</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="setor">
+        <div class="container">
+            <div class="section-badge">Identifikasi Cerdas</div>
+            <h2 class="section-title">Setorkan Limbah dengan Deskripsi</h2>
+            <p class="section-desc">Tulis deskripsi limbah dalam bahasa Indonesia. AI akan menganalisis teks (NLP) untuk menentukan jenis limbah, estimasi nilai ekonomi, dan rekomendasi produk.</p>
+
+            <div class="setor-grid">
+                <div class="card setor-form">
+                    <div class="form-group">
+                        <label>Foto Limbah</label>
+                        <div class="file-upload" id="fileUploadArea">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p style="font-weight: 500; font-size: 0.9rem;">Klik untuk mengunggah foto</p>
+                            <span style="font-size: 0.75rem; color: var(--text-muted);" id="fileName">Belum ada file terpilih</span>
+                            <input type="file" id="wasteFileInput" accept="image/*" style="display: none;" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Deskripsi Limbah</label>
+                        <textarea class="form-control" id="wasteDescription" rows="3" placeholder="Contoh: Saya punya jaring nelayan bekas berbahan nylon, kualitas bagus, berat 5 kg">Saya punya jaring nelayan bekas berbahan nylon, kualitas bagus, berat 5 kg</textarea>
+                        <div id="nlpDetectedBadge" style="margin-top: 8px;"></div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div class="form-group">
+                            <label>Berat (kg)</label>
+                            <input type="number" class="form-control" id="wasteWeight" value="5" min="0.1" step="0.1" />
+                        </div>
+                        <div class="form-group">
+                            <label>Nama Penyetor</label>
+                            <input type="text" class="form-control" id="wasteName" value="Andi Pratama" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Metode Pengiriman</label>
+                        <div class="delivery-options" id="deliveryOptions">
+                            <div class="delivery-opt active" data-opt="antar"><i class="fas fa-walking"></i>Antar Sendiri</div>
+                            <div class="delivery-opt" data-opt="dijemput"><i class="fas fa-truck"></i>Dijemput</div>
+                        </div>
+                    </div>
+                    <div id="alamatSection" style="display: none; margin-bottom: 20px;">
+                        <div class="form-group">
+                            <label>Alamat Penjemputan</label>
+                            <textarea class="form-control" id="wasteAddress" rows="2">Jl. Pantai Indah No. 123</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Kota</label>
+                            <select class="form-control" id="wasteCity">
+                                <optgroup label="Zona Gratis">
+                                    <option value="jember" selected>Jember (Gratis)</option>
+                                    <option value="surabaya">Surabaya (Gratis)</option>
+                                </optgroup>
+                                <optgroup label="Jawa Timur">
+                                    <option value="malang">Malang (Rp 15.000)</option>
+                                    <option value="banyuwangi">Banyuwangi (Rp 35.000)</option>
+                                </optgroup>
+                                <optgroup label="Luar Jawa">
+                                    <option value="makassar">Makassar (Rp 130.000)</option>
+                                    <option value="papua">Papua (Rp 180.000)</option>
+                                </optgroup>
+                            </select>
+                            <p style="font-size: 0.8rem; color: var(--primary); margin-top: 4px;" id="ongkirNote">Gratis ongkir untuk wilayah Jember & Surabaya</p>
+                        </div>
+                    </div>
+                    <button class="btn-primary" id="submitWasteBtn">Analisis & Setor Limbah</button>
+                </div>
+
+                <div class="card" id="setorResult">
+                    <div class="result-placeholder" id="resultPlaceholder">
+                        <i class="fas fa-search"></i>
+                        <h4 style="margin-bottom: 8px;">Menunggu Input</h4>
+                        <p style="font-size: 0.9rem;">Hasil analisis NLP akan muncul di sini.</p>
+                    </div>
+
+                    <div class="loading-container" id="loadingContainer">
+                        <div class="progress-bar-wrapper">
+                            <div class="progress-bar-fill" id="progressFill"></div>
+                        </div>
+                        <p style="font-size: 0.9rem; font-weight: 600;" id="progressText">Menganalisis deskripsi...</p>
+                    </div>
+
+                    <div class="result-card" id="resultCard">
+                        <div class="result-header">
+                            <div class="icon-box"><i class="fas fa-check"></i></div>
+                            <div>
+                                <h3 id="resultMaterialName">Jaring Nelayan</h3>
+                                <p style="font-size: 0.8rem; color: var(--text-muted);" id="resultMaterialType">Nylon</p>
+                            </div>
+                        </div>
+                        <div class="alert-box" id="nlpAnalysisText">NLP mendeteksi kategori berdasarkan kata kunci.</div>
+                        <div class="data-row"><span class="label">Kualitas</span><span class="value" id="resultQuality">Baik</span></div>
+                        <div class="data-row"><span class="label">Berat</span><span class="value" id="resultWeight">5 kg</span></div>
+                        <div class="data-row"><span class="label">Estimasi Nilai Ekonomi</span><span class="value green" id="resultPrice">Rp 50.000</span></div>
+                        <div class="data-row"><span class="label">Rekomendasi Produk</span><span class="value" id="resultProducts" style="text-align: right; max-width: 60%;">Tote Bag, Dompet</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FITUR AI -->
+    <section class="bg-alt" id="fitur">
+        <div class="container">
+            <div class="section-badge">Teknologi Inti</div>
+            <h2 class="section-title">NLP + Rule-Based System</h2>
+            <p class="section-desc">Uji coba langsung bagaimana AI kami memproses teks, menghitung nilai ekonomi, dan memberikan rekomendasi produk secara transparan.</p>
+            
+            <div class="features-grid">
+                <div class="card feature-card">
+                    <div class="icon-box"><i class="fas fa-language"></i></div>
+                    <h4>1. NLP Text Analysis</h4>
+                    <p class="subtitle">Ekstraksi entitas dari deskripsi teks bahasa Indonesia.</p>
+                    <input type="text" class="form-control" id="nlpTextInput" value="jaring nelayan nylon" style="margin-bottom: 12px;">
+                    <button class="btn-primary" id="nlpAnalyzeBtn" style="width: 100%; padding: 8px; font-size: 0.9rem;">Analisis Teks</button>
+                    <div class="demo-output" id="nlpOutput">
+                        <div class="data-row"><span class="label">Terdeteksi</span><span class="value" id="nlpDetected">Jaring Nelayan</span></div>
+                        <div class="data-row"><span class="label">Material</span><span class="value" id="nlpMaterial">Nylon</span></div>
+                        <div class="data-row"><span class="label">Confidence</span><span class="value green" id="nlpConfidence">95%</span></div>
+                    </div>
+                </div>
+
+                <div class="card feature-card">
+                    <div class="icon-box"><i class="fas fa-calculator"></i></div>
+                    <h4>2. Rule-Based Valuation</h4>
+                    <p class="subtitle">Perhitungan harga berdasarkan aturan (IF-THEN).</p>
+                    <select class="form-control" id="ruleType" style="margin-bottom: 8px;">
+                        <option value="jaring">Jaring Nelayan</option>
+                        <option value="plastik">Plastik Laut</option>
+                        <option value="tali">Tali Tambang</option>
+                        <option value="kerang">Kerang Laut</option>
+                    </select>
+                    <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                        <input type="number" class="form-control" id="ruleWeight" value="5" placeholder="Berat (kg)">
+                        <select class="form-control" id="ruleQuality">
+                            <option value="Premium">Premium</option>
+                            <option value="Baik" selected>Baik</option>
+                            <option value="Sedang">Sedang</option>
+                            <option value="Rendah">Rendah</option>
+                        </select>
+                    </div>
+                    <button class="btn-primary" id="ruleValuationBtn" style="width: 100%; padding: 8px; font-size: 0.9rem;">Hitung Valuasi</button>
+                    <div class="demo-output" id="ruleOutput">
+                        <div class="data-row"><span class="label">Total Nilai</span><span class="value gold" id="ruleResult">Rp 50.000</span></div>
+                        <div class="data-row"><span class="label">Harga / Kg</span><span class="value" id="rulePerKg">Rp 10.000</span></div>
+                    </div>
+                </div>
+
+                <div class="card feature-card">
+                    <div class="icon-box"><i class="fas fa-lightbulb"></i></div>
+                    <h4>3. Rule-Based Recommendation</h4>
+                    <p class="subtitle">Sistem pakar untuk rekomendasi produk fesyen.</p>
+                    <select class="form-control" id="recType" style="margin-bottom: 12px;">
+                        <option value="jaring">Jaring Nelayan</option>
+                        <option value="plastik">Plastik Laut</option>
+                        <option value="tali">Tali Tambang</option>
+                        <option value="kerang">Kerang Laut</option>
+                    </select>
+                    <button class="btn-primary" id="recBtn" style="width: 100%; padding: 8px; font-size: 0.9rem;">Dapatkan Rekomendasi</button>
+                    <div class="demo-output" id="recList">
+                        <div class="data-row"><span class="label">Tote Bag</span><span class="value green">Sangat Cocok</span></div>
+                        <div class="data-row"><span class="label">Sling Bag</span><span class="value green">Sangat Cocok</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="marketplace">
+        <div class="container">
+            <div class="section-badge">Pasar Sirkular</div>
+            <h2 class="section-title">Marketplace UMKM</h2>
+            <p class="section-desc">Produk fesyen hasil olahan limbah pesisir dari mitra UMKM kami.</p>
+            
+            <div class="marketplace-grid" id="productsGrid"></div>
+        </div>
+    </section>
+
+    <!-- VOLUNTEER SECTION -->
+    <section class="bg-alt" id="volunteer">
+        <div class="container">
+            <div class="section-badge">Pendampingan</div>
+            <h2 class="section-title">Volunteer Mahasiswa</h2>
+            <p class="section-desc">Butuh bantuan menggunakan EcoCycle AI? Volunteer dari UNESA dan Universitas Jember siap memandu Anda secara gratis melalui WhatsApp.</p>
+
+            <div class="volunteer-grid">
+                <div class="card vol-card">
+                    <div class="vol-avatar"><i class="fas fa-user-graduate"></i></div>
+                    <div class="vol-name">Ahmad Naufal Tirus</div>
+                    <div class="vol-role">Mahasiswa D4 Manajemen Informatika - UNESA</div>
+                    <span class="vol-badge">Volunteer Senior</span>
+                    <p class="vol-desc">Siap membantu Anda memahami cara kerja AI, fitur setor limbah, dan analisis NLP.</p>
+                    <button class="vol-btn" onclick="window.open('https://wa.me/6282143854418?text=Halo%20Bang%20Naufal,%20saya%20butuh%20bimbingan%20EcoCycle%20AI')"><i class="fab fa-whatsapp"></i> Chat Bimbingan</button>
+                </div>
+
+                <div class="card vol-card">
+                    <div class="vol-avatar"><i class="fas fa-user-graduate"></i></div>
+                    <div class="vol-name">Shevi Kusuma Wardani</div>
+                    <div class="vol-role">Mahasiswa D4 Manajemen Informatika - UNESA</div>
+                    <span class="vol-badge">Volunteer Senior</span>
+                    <p class="vol-desc">Spesialis Circular Impact Tracker dan pemberdayaan UMKM fesyen.</p>
+                    <button class="vol-btn" onclick="window.open('https://wa.me/6285730553648?text=Halo%20Shevi,%20saya%20butuh%20bimbingan%20EcoCycle%20AI')"><i class="fab fa-whatsapp"></i> Chat Bimbingan</button>
+                </div>
+
+                <div class="card vol-card">
+                    <div class="vol-avatar"><i class="fas fa-user-graduate"></i></div>
+                    <div class="vol-name">Moch. Rizal Fahmi</div>
+                    <div class="vol-role">Mahasiswa Teknik Informatika - Universitas Jember</div>
+                    <span class="vol-badge">Volunteer Lokal Jember</span>
+                    <p class="vol-desc">Berpengalaman dalam pengelolaan limbah pesisir dan pemberdayaan masyarakat lokal.</p>
+                    <button class="vol-btn" onclick="window.open('https://wa.me/6281234567890?text=Halo%20Rizal,%20saya%20butuh%20bimbingan%20EcoCycle%20AI')"><i class="fab fa-whatsapp"></i> Chat Bimbingan</button>
+                </div>
+
+                <div class="card vol-card">
+                    <div class="vol-avatar"><i class="fas fa-user-graduate"></i></div>
+                    <div class="vol-name">Rina Widya Lestari</div>
+                    <div class="vol-role">Mahasiswa Manajemen - Universitas Jember</div>
+                    <span class="vol-badge">Volunteer Lokal Jember</span>
+                    <p class="vol-desc">Ahli dalam pemasaran produk daur ulang dan pemberdayaan UMKM lokal.</p>
+                    <button class="vol-btn" onclick="window.open('https://wa.me/6281234567891?text=Halo%20Rina,%20saya%20butuh%20bimbingan%20EcoCycle%20AI')"><i class="fab fa-whatsapp"></i> Chat Bimbingan</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="impact-section" id="impact">
+        <div class="container">
+            <h2 class="section-title">Circular Impact Tracker</h2>
+            <p style="color: var(--text-muted);">Dampak nyata dari ekosistem EcoCycle AI.</p>
+            <div class="impact-grid">
+                <div class="impact-item"><span class="number" id="wasteManaged">1.250</span><span class="label">Kg Limbah Terkelola</span></div>
+                <div class="impact-item"><span class="number" id="co2Reduced">520</span><span class="label">Kg CO₂ Berkurang</span></div>
+                <div class="impact-item"><span class="number" id="productsCreated">350</span><span class="label">Produk Tercipta</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CART SIDEBAR -->
+    <div class="cart-overlay" id="cartOverlay"></div>
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3 style="font-size: 1.1rem;">Keranjang</h3>
+            <button id="closeCart" style="background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-muted);"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <p style="text-align: center; color: var(--text-muted); margin-top: 32px; font-size: 0.9rem;">Keranjang kosong</p>
+        </div>
+        <div class="cart-footer" id="cartFooter" style="display: none;">
+            <div style="display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 16px;">
+                <span>Total</span>
+                <span id="cartTotal">Rp 0</span>
+            </div>
+            <button class="btn-primary" style="width: 100%;" id="checkoutBtn">Checkout</button>
+        </div>
+    </div>
+
+    <script>
+        // DATABASE & LOGIC
+        const materialDB = {
+            jaring: { name: 'Jaring Nelayan', material: 'Nylon', quality: 'Baik', recycle: '85%', pricePerKg: 10000, category: 'High Value', products: ['Tote Bag', 'Sling Bag', 'Dompet', 'Jaket'], keywords: ['jaring', 'nelayan', 'nylon', 'tali', 'pancing', 'jaring nelayan', 'jaring nylon'] },
+            plastik: { name: 'Plastik Laut', material: 'Polyethylene', quality: 'Sedang', recycle: '70%', pricePerKg: 6000, category: 'Medium Value', products: ['Tas Belanja', 'Tas Jinjing', 'Tempat Pensil'], keywords: ['plastik', 'botol', 'kemasan', 'polyethylene', 'plastik laut'] },
+            tali: { name: 'Tali Tambang', material: 'Polypropylene', quality: 'Baik', recycle: '80%', pricePerKg: 8000, category: 'High Value', products: ['Tas Anyam', 'Tali Sepatu', 'Gelang'], keywords: ['tali', 'tambang', 'polypropylene', 'tali tambang'] },
+            kerang: { name: 'Kerang Laut', material: 'Calcium Carbonate', quality: 'Premium', recycle: '90%', pricePerKg: 12000, category: 'Premium Value', products: ['Perhiasan', 'Aksesoris', 'Dekorasi'], keywords: ['kerang', 'cangkang', 'shell', 'tiram', 'kerang laut'] },
+            kaca: { name: 'Kaca Laut', material: 'Silica', quality: 'Baik', recycle: '75%', pricePerKg: 5000, category: 'Medium Value', products: ['Perhiasan Kaca', 'Mozaik', 'Aksesoris'], keywords: ['kaca', 'botol kaca', 'pecahan kaca', 'kaca laut'] },
+            karet: { name: 'Karet Ban', material: 'Rubber', quality: 'Sedang', recycle: '60%', pricePerKg: 4000, category: 'Low Value', products: ['Tas Karet', 'Dompet', 'Sandal'], keywords: ['karet', 'ban', 'rubber', 'karet ban'] }
+        };
+
+        const products = [
+            { id: 1, name: 'Eco Marine Tote Bag', material: 'Jaring Nelayan Nylon', category: 'tas', price: 185000, originalPrice: 250000, seller: 'EcoWear Studio', image: 'Eco Marine Tote Bag.jpeg', wasteType: 'Jaring Nelayan' },
+            { id: 2, name: 'Sling Bag Laut', material: 'Plastik Laut Daur Ulang', category: 'tas', price: 165000, originalPrice: 220000, seller: 'SeaFashion', image: 'Sling Bag Laut.jpeg', wasteType: 'Plastik Laut' },
+            { id: 3, name: 'Dompet Anyaman Nylon', material: 'Tali Tambang Nylon', category: 'tas', price: 95000, originalPrice: 130000, seller: 'NylonCraft', image: 'Dompet Anyaman Nylon.jpeg', wasteType: 'Tali Tambang' },
+            { id: 4, name: 'Jaket Eco Marine', material: 'Jaring Nelayan + Karet', category: 'pakaian', price: 325000, originalPrice: 450000, seller: 'EcoWear Studio', image: 'Jaket Eco Marine.jpeg', wasteType: 'Jaring Nelayan' },
+            { id: 5, name: 'Gelang Kerang Premium', material: 'Kerang Laut Pilihan', category: 'aksesoris', price: 75000, originalPrice: 100000, seller: 'ShellArt', image: 'Gelang Kerang Premium.jpeg', wasteType: 'Kerang Laut' },
+            { id: 6, name: 'Tas Jinjing Plastik Laut', material: 'Plastik Laut HPDE', category: 'tas', price: 145000, originalPrice: 190000, seller: 'SeaFashion', image: 'Tas Jinjing Plastik Laut.jpeg', wasteType: 'Plastik Laut' },
+            { id: 7, name: 'Kalung Mozaik Kaca Laut', material: 'Kaca Laut Daur Ulang', category: 'aksesoris', price: 120000, originalPrice: 160000, seller: 'ShellArt', image: 'Kalung Mozaik Kaca Laut.jpeg', wasteType: 'Kaca Laut' },
+            { id: 8, name: 'Sandals Karet Daur Ulang', material: 'Karet Ban Bekas', category: 'sepatu', price: 210000, originalPrice: 280000, seller: 'NylonCraft', image: 'Sandals Karet Daur Ulang.jpeg', wasteType: 'Karet Ban' },
+            { id: 9, name: 'Tas Anyam Tali Tambang', material: 'Tali Tambang Polypropylene', category: 'tas', price: 155000, originalPrice: 200000, seller: 'NylonCraft', image: 'Tas Anyam Tali Tambang.jpeg', wasteType: 'Tali Tambang' },
+            { id: 10, name: 'Anting Kerang Laut', material: 'Kerang Laut Premium', category: 'aksesoris', price: 65000, originalPrice: 85000, seller: 'ShellArt', image: 'Anting Kerang Laut.jpeg', wasteType: 'Kerang Laut' },
+            { id: 11, name: 'Tas Ransel Jaring Nylon', material: 'Jaring Nelayan Nylon', category: 'tas', price: 275000, originalPrice: 350000, seller: 'EcoWear Studio', image: 'Tas Ransel Jaring Nylon.jpeg', wasteType: 'Jaring Nelayan' },
+            { id: 12, name: 'Dompet Karet Ban', material: 'Karet Ban Bekas', category: 'tas', price: 85000, originalPrice: 110000, seller: 'NylonCraft', image: 'Dompet Karet Ban.jpeg', wasteType: 'Karet Ban' }
+        ];
+
+        let cart = [];
+        let riwayatSetoran = JSON.parse(localStorage.getItem('riwayatSetoran')) || [];
+        let totalWaste = riwayatSetoran.reduce((sum, item) => sum + item.berat, 0);
+        let deliveryOption = 'antar';
+
+        // UI INTERACTIONS
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => {
+            const html = document.documentElement;
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            themeToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        });
+
+        document.getElementById('fileUploadArea').addEventListener('click', () => document.getElementById('wasteFileInput').click());
+        document.getElementById('wasteFileInput').addEventListener('change', (e) => {
+            if (e.target.files[0]) {
+                document.getElementById('fileName').textContent = e.target.files[0].name;
+                document.getElementById('fileName').style.color = 'var(--primary)';
+            }
+        });
+
+        document.querySelectorAll('.delivery-opt').forEach(opt => {
+            opt.addEventListener('click', () => {
+                document.querySelectorAll('.delivery-opt').forEach(o => o.classList.remove('active'));
+                opt.classList.add('active');
+                deliveryOption = opt.dataset.opt;
+                document.getElementById('alamatSection').style.display = deliveryOption === 'dijemput' ? 'block' : 'none';
+            });
+        });
+
+        // NLP Logic
+        function analyzeWasteDescription(text) {
+            let scores = {};
+            let bestMatch = 'jaring';
+            let maxScore = 0;
+            for (let [type, data] of Object.entries(materialDB)) {
+                let score = 0;
+                data.keywords.forEach(k => { if (text.toLowerCase().includes(k)) score += 10; });
+                if (score > maxScore) { maxScore = score; bestMatch = type; }
+            }
+            return { detectedType: bestMatch, confidence: Math.min(Math.round((maxScore / 50) * 100), 95) };
+        }
+
+        // Submit Form
+        document.getElementById('submitWasteBtn').addEventListener('click', async function() {
+            const desc = document.getElementById('wasteDescription').value;
+            const weight = parseFloat(document.getElementById('wasteWeight').value) || 1;
+            
+            if (desc.length < 3) return alert('Deskripsi terlalu pendek!');
+
+            const analysis = analyzeWasteDescription(desc);
+            const data = materialDB[analysis.detectedType];
+            
+            document.getElementById('resultPlaceholder').style.display = 'none';
+            document.getElementById('resultCard').style.display = 'none';
+            document.getElementById('loadingContainer').style.display = 'block';
+            document.getElementById('progressText').textContent = 'Menganalisis...';
+            
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 10;
+                document.getElementById('progressFill').style.width = progress + '%';
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    document.getElementById('loadingContainer').style.display = 'none';
+                    
+                    document.getElementById('resultCard').style.display = 'block';
+                    document.getElementById('resultMaterialName').textContent = data.name;
+                    document.getElementById('resultMaterialType').textContent = data.material;
+                    document.getElementById('resultQuality').textContent = 'Baik';
+                    document.getElementById('resultWeight').textContent = weight + ' kg';
+                    
+                    const price = data.pricePerKg * weight;
+                    document.getElementById('resultPrice').textContent = 'Rp ' + price.toLocaleString('id-ID');
+                    document.getElementById('resultProducts').textContent = data.products.join(', ');
+                    document.getElementById('nlpAnalysisText').textContent = `NLP mendeteksi: "${data.name}" (${analysis.confidence}% confidence).`;
+                    
+                    totalWaste += weight;
+                    document.getElementById('totalWasteHero').textContent = totalWaste.toLocaleString();
+                }
+            }, 150);
+        });
+
+        // FITUR AI DEMO
+        document.getElementById('nlpAnalyzeBtn').addEventListener('click', () => {
+            const text = document.getElementById('nlpTextInput').value;
+            const result = analyzeWasteDescription(text);
+            const data = materialDB[result.detectedType];
+            
+            document.getElementById('nlpDetected').textContent = data.name;
+            document.getElementById('nlpMaterial').textContent = data.material;
+            document.getElementById('nlpConfidence').textContent = result.confidence + '%';
+        });
+
+        document.getElementById('ruleValuationBtn').addEventListener('click', () => {
+            const type = document.getElementById('ruleType').value;
+            const weight = parseFloat(document.getElementById('ruleWeight').value) || 1;
+            const quality = document.getElementById('ruleQuality').value;
+            
+            const data = materialDB[type];
+            let multiplier = 1;
+            if (quality === 'Premium') multiplier = 1.5;
+            if (quality === 'Sedang') multiplier = 0.7;
+            if (quality === 'Rendah') multiplier = 0.4;
+            
+            const pricePerKg = data.pricePerKg * multiplier;
+            const total = pricePerKg * weight;
+            
+            document.getElementById('ruleResult').textContent = 'Rp ' + total.toLocaleString('id-ID');
+            document.getElementById('rulePerKg').textContent = 'Rp ' + pricePerKg.toLocaleString('id-ID');
+        });
+
+        document.getElementById('recBtn').addEventListener('click', () => {
+            const type = document.getElementById('recType').value;
+            const data = materialDB[type];
+            
+            const container = document.getElementById('recList');
+            container.innerHTML = data.products.map(p => `
+                <div class="data-row"><span class="label">${p}</span><span class="value green">Sangat Cocok</span></div>
+            `).join('');
+        });
+
+        // MARKETPLACE & CART
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = products.map(p => {
+                const disc = Math.round((1 - p.price / p.originalPrice) * 100);
+                return `
+                <div class="card product-card">
+                    <div class="product-image">
+                        <img src="${p.image}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/300x300/f1f5f9/64748b?text=Image'">
+                        <span class="badge badge-materi">${p.wasteType}</span>
+                        <span class="badge badge-disc">-${disc}%</span>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">${p.name}</div>
+                        <div class="product-meta">${p.material} • ${p.seller}</div>
+                        <div class="product-price">Rp ${p.price.toLocaleString('id-ID')}</div>
+                        <div class="product-actions">
+                            <button class="btn-add" onclick="addToCart(${p.id})">Tambah</button>
+                            <button class="btn-buy" onclick="addToCart(${p.id})">Beli</button>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function addToCart(id) {
+            const prod = products.find(p => p.id === id);
+            const existing = cart.find(c => c.id === id);
+            if (existing) existing.qty++;
+            else cart.push({ ...prod, qty: 1 });
+            updateCartUI();
+            document.getElementById('cartSidebar').classList.add('active');
+            document.getElementById('cartOverlay').classList.add('active');
+        }
+
+        function updateCartUI() {
+            document.getElementById('cartCount').textContent = cart.reduce((sum, item) => sum + item.qty, 0);
+            const cartItems = document.getElementById('cartItems');
+            const cartFooter = document.getElementById('cartFooter');
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p style="text-align: center; color: var(--text-muted); margin-top: 32px; font-size: 0.9rem;">Keranjang kosong</p>';
+                cartFooter.style.display = 'none';
+                return;
+            }
+
+            cartItems.innerHTML = cart.map(item => `
+                <div style="display: flex; gap: 12px; margin-bottom: 16px; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+                    <img src="${item.image}" style="width: 48px; height: 48px; border-radius: 8px; object-fit: cover;">
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600; font-size: 0.9rem;">${item.name}</div>
+                        <div style="color: var(--primary); font-size: 0.85rem;">Rp ${(item.price * item.qty).toLocaleString('id-ID')}</div>
+                    </div>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <button onclick="cart.find(c=>c.id===${item.id}).qty--; updateCartUI();" style="padding: 2px 8px; border: 1px solid var(--border); background: none; border-radius: 4px; cursor: pointer;">-</button>
+                        <span>${item.qty}</span>
+                        <button onclick="cart.find(c=>c.id===${item.id}).qty++; updateCartUI();" style="padding: 2px 8px; border: 1px solid var(--border); background: none; border-radius: 4px; cursor: pointer;">+</button>
+                    </div>
+                </div>
+            `).join('');
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            document.getElementById('cartTotal').textContent = 'Rp ' + total.toLocaleString('id-ID');
+            cartFooter.style.display = 'block';
+        }
+
+        document.getElementById('cartToggle').addEventListener('click', () => {
+            document.getElementById('cartSidebar').classList.add('active');
+            document.getElementById('cartOverlay').classList.add('active');
+        });
+        document.getElementById('closeCart').addEventListener('click', () => {
+            document.getElementById('cartSidebar').classList.remove('active');
+            document.getElementById('cartOverlay').classList.remove('active');
+        });
+        document.getElementById('cartOverlay').addEventListener('click', () => {
+            document.getElementById('cartSidebar').classList.remove('active');
+            document.getElementById('cartOverlay').classList.remove('active');
+        });
+        document.getElementById('checkoutBtn').addEventListener('click', () => {
+            alert('Checkout berhasil diproses!');
+            cart = [];
+            updateCartUI();
+            document.getElementById('cartSidebar').classList.remove('active');
+            document.getElementById('cartOverlay').classList.remove('active');
+        });
+
+        // Init
+        renderProducts();
+        document.getElementById('totalWasteHero').textContent = totalWaste.toLocaleString();
+    </script>
+</body>
+</html>
